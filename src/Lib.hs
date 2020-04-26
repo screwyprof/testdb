@@ -17,22 +17,28 @@ instance FromRow User where
 
 someFunc :: IO ()
 someFunc = do
-  -- Connect using libpq strings
-  --conn <- connectPostgreSQL "host='localhost' port=5432 user=postgres pass=postgres"
-    conn <- mkConn 
-    -- conn <- connect
-    --   defaultConnectInfo
-    --   { connectHost = "localhost"
-    --   , connectDatabase = "verisart"
-    --   , connectUser = "postgres"
-    --   , connectPassword = ""
-    --   }
-    --mapM_ print =<< (query_ conn "SELECT 1 + 1" :: IO [Only Int])
-    --[Only i] <- query_ conn "select 2 + 2" :: IO [Only Int]
-    --print i
-    --[Only u] <- fetchUser conn :: IO [Only (Int, String, String)]
-    u <- fetchUser conn
+    conn <- mkConn
+    u <- fetchUser conn 2341
     print u
+    users <- fetchUsers conn
+    --print users
+    mapM_ print users
+
+fetchUser :: Connection -> Int -> IO [User]
+fetchUser conn userID = 
+    query conn
+       "SELECT user_id, name, email FROM users WHERE user_id = ?"
+       (Only userID)
+
+fetchUsers :: Connection -> IO [User]
+fetchUsers conn =
+    query conn
+       ("SELECT user_id, name, email " <>
+       "FROM users " <>
+       "WHERE name IS NOT NULL AND user_type = ? AND deleted = ? " <>
+       "ORDER BY user_id DESC " <>
+       "LIMIT ?")
+       ("normal" :: String, False, 5 :: Int) :: IO [User]
 
 mkConn :: IO Connection
 mkConn = connect
@@ -42,9 +48,3 @@ mkConn = connect
       , connectUser = "postgres"
       , connectPassword = ""
       }
-
-fetchUser :: Connection -> IO [User]
-fetchUser conn = 
-    query conn
-       "SELECT user_id, name, email FROM users WHERE user_id = ?"
-       (Only (2341::Int))
