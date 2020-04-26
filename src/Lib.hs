@@ -2,6 +2,8 @@
 
 module Lib
     ( someFunc
+    , User(..)
+    , fetchUser
     ) where
 
 import Database.PostgreSQL.Simple
@@ -10,7 +12,7 @@ import Database.PostgreSQL.Simple.FromRow
 data User = User { userID :: Int
                  , userName :: String 
                  , userEmail :: String
-                 } deriving (Show)
+                 } deriving (Show, Eq)
 
 instance FromRow User where
   fromRow = User <$> field <*> field <*> field
