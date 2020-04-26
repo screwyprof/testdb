@@ -21,8 +21,8 @@ someFunc = do
     u <- fetchUser conn 2341
     print u
     users <- fetchUsers conn
-    --print users
     mapM_ print users
+    close conn
 
 fetchUser :: Connection -> Int -> IO [User]
 fetchUser conn userID = 
