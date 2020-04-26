@@ -38,7 +38,7 @@ fetchUsers conn =
        "WHERE name IS NOT NULL AND user_type = ? AND deleted = ? " <>
        "ORDER BY user_id DESC " <>
        "LIMIT ?")
-       ("normal" :: String, False, 5 :: Int) :: IO [User]
+       ("normal" :: String, False, 5 :: Int)
 
 mkConn :: IO Connection
 mkConn = connect
