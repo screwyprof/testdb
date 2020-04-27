@@ -13,9 +13,14 @@ spec :: Spec
 spec = around (withDbConn mkTestConnInfo) $
     describe "fetch user" $ 
         it "returns valid user" $ \conn -> do
-            got <- fetchUser conn 2341
-            let want = [User {userID=2341, userName="Max O'Donnell", userEmail="max@verisart.com"}]
-            got `shouldBe` want
+            let newUser = User { userId=0
+                               , userName="Cool Guy"
+                               , userEmail="cool@cool"
+                               , userPassword="qwerty123"
+                               }
+            want <- addUser conn newUser
+            got <- fetchUser conn (userId want)
+            got `shouldBe` Just want
 
 mkTestConnInfo :: ConnectInfo
 mkTestConnInfo =
