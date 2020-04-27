@@ -9,6 +9,7 @@ module Lib
     , withDbConn
     ) where
 
+import Data.ByteString (ByteString)
 import Data.Maybe (fromJust)
 
 import Database.PostgreSQL.Simple
@@ -30,7 +31,7 @@ instance ToRow User where
 
 someFunc :: IO ()
 someFunc =
-    withDbConn mkConnInfo $ \conn -> do
+    withDbConn connURI $ \conn -> do
         let newUser = User { userId = -1
                            , userName="CoolUser"
                            , userEmail="cool@cool.net"
@@ -67,17 +68,11 @@ fetchUsers conn =
        "LIMIT ?")
        ("normal" :: String, False, 5 :: Int)
 
-withDbConn :: ConnectInfo -> (Connection -> IO ()) -> IO ()
-withDbConn connInfo action = do
-    conn <- connect connInfo
+withDbConn :: ByteString -> (Connection -> IO ()) -> IO ()
+withDbConn uri action = do
+    conn <- connectPostgreSQL uri
     action conn
     close conn
 
-mkConnInfo :: ConnectInfo
-mkConnInfo =
-      defaultConnectInfo
-      { connectHost = "localhost"
-      , connectDatabase = "verisart"
-      , connectUser = "postgres"
-      , connectPassword = ""
-      }
+connURI :: ByteString
+connURI = "postgres://postgres@localhost/verisart"

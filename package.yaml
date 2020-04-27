@@ -26,6 +26,7 @@ library:
   source-dirs: src
   dependencies:
     - postgresql-simple
+    - bytestring
 
 executables:
   testdb-exe:
@@ -48,5 +49,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - testdb
+    - bytestring
     - hspec
     - postgresql-simple

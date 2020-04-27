@@ -1,8 +1,11 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module LibSpec (main, spec) where
 
+import Data.ByteString (ByteString)
 import Test.Hspec
-import Database.PostgreSQL.Simple
-import Control.Exception.Base (bracket)
+--import Database.PostgreSQL.Simple
+--import Control.Exception.Base (bracket)
 
 import Lib
 
@@ -10,7 +13,7 @@ main :: IO ()
 main = hspec spec
 
 spec :: Spec
-spec = around (withDbConn mkTestConnInfo) $
+spec = around (withDbConn testConnURI) $
     describe "fetch user" $ 
         it "returns valid user" $ \conn -> do
             let newUser = User { userId=0
@@ -22,11 +25,5 @@ spec = around (withDbConn mkTestConnInfo) $
             got <- fetchUser conn (userId want)
             got `shouldBe` Just want
 
-mkTestConnInfo :: ConnectInfo
-mkTestConnInfo =
-      defaultConnectInfo
-      { connectHost = "localhost"
-      , connectDatabase = "verisart"
-      , connectUser = "postgres"
-      , connectPassword = ""
-      }
+testConnURI :: ByteString
+testConnURI = "postgres://postgres@localhost/verisart"
