@@ -16,14 +16,15 @@ spec :: Spec
 spec = around (withDbConn testConnURI) $
     describe "fetch user" $ 
         it "returns valid user" $ \conn -> do
-            let newUser = User { userId=0
-                               , userName="Cool Guy"
-                               , userEmail="cool@cool"
-                               , userPassword="qwerty123"
-                               }
-            want <- addUser conn newUser
+            want <- addUser conn testUser
             got <- fetchUser conn (userId want)
             got `shouldBe` Just want
+
+testUser =  User { userId=0
+                 , userName="Cool Guy"
+                 , userEmail="cool@cool"
+                 , userPassword="qwerty123"
+                 }
 
 testConnURI :: ByteString
 testConnURI = "postgres://postgres@localhost/verisart"
