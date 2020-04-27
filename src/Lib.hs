@@ -37,13 +37,14 @@ someFunc =
                            , userEmail="cool@cool.net"
                            , userPassword="qwerty123"
                            }
+        putStrLn "Creating user..."
         addedUser <- addUser conn newUser
         let uid = userId addedUser
-        putStrLn $ "UserID : " ++ show uid
-        u <- fromJust <$>fetchUser conn uid
-        print u
-        users <- fetchUsers conn
-        mapM_ print users
+        putStrLn $ "User #" ++ show uid ++ " created"
+        putStrLn "User info:"
+        mapM_ print =<< fetchUser conn uid
+        putStrLn "Users:"
+        mapM_ print =<< fetchUsers conn
 
 addUser :: Connection -> User -> IO User
 addUser conn u = do
