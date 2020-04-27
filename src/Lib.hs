@@ -4,6 +4,7 @@ module Lib
     ( someFunc
     , User(..)
     , fetchUser
+    , withDbConn
     ) where
 
 import Database.PostgreSQL.Simple
@@ -18,13 +19,12 @@ instance FromRow User where
   fromRow = User <$> field <*> field <*> field
 
 someFunc :: IO ()
-someFunc = do
-    conn <- mkConn
-    u <- fetchUser conn 2341
-    print u
-    users <- fetchUsers conn
-    mapM_ print users
-    close conn
+someFunc =
+    withDbConn mkConnInfo $ \conn -> do
+        u <- fetchUser conn 2341
+        print u
+        users <- fetchUsers conn
+        mapM_ print users
 
 fetchUser :: Connection -> Int -> IO [User]
 fetchUser conn userID = 
@@ -42,8 +42,14 @@ fetchUsers conn =
        "LIMIT ?")
        ("normal" :: String, False, 5 :: Int)
 
-mkConn :: IO Connection
-mkConn = connect
+withDbConn :: ConnectInfo -> (Connection -> IO ()) -> IO ()
+withDbConn connInfo action = do
+    conn <- connect connInfo
+    action conn
+    close conn
+
+mkConnInfo :: ConnectInfo
+mkConnInfo =
       defaultConnectInfo
       { connectHost = "localhost"
       , connectDatabase = "verisart"
