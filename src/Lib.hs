@@ -1,3 +1,4 @@
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lib
@@ -22,10 +23,10 @@ data User = User { userId :: Int
                  } deriving (Show, Eq)
 
 instance FromRow User where
-  fromRow = User <$> field <*> field <*> field <*> field
+    fromRow = User <$> field <*> field <*> field <*> field
 
 instance ToRow User where
-  toRow u = [toField (userName u), toField (userEmail u), toField (userPassword u)]
+    toRow User{..} = toRow (userName, userEmail, userPassword)
 
 someFunc :: IO ()
 someFunc =
