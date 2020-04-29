@@ -1,13 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module LibSpec (main, spec) where
+module DbSpec (main, spec) where
 
 import Data.ByteString (ByteString)
 import Test.Hspec
---import Database.PostgreSQL.Simple
---import Control.Exception.Base (bracket)
 
-import Lib
+import Db
 
 main :: IO ()
 main = hspec spec
@@ -16,7 +14,7 @@ spec :: Spec
 spec = around (withDbConn testConnURI) $
     describe "fetch user" $ 
         it "returns valid user" $ \conn -> do
-            want <- addUser conn testUser
+            Right want <- addUser conn testUser
             got <- fetchUser conn (userId want)
             got `shouldBe` Just want
 
