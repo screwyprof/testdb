@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 65cc6db242da606dfb716d6be2d47fd145bda2a414d21c41ea6e45f42a063fd0
+-- hash: cd1c4d84d8becce6cff84181750e7ac06790e19f02761c99d35fbe6044aa3710
 
 name:           testdb
 version:        0.1.0.0
@@ -29,7 +29,6 @@ library
   exposed-modules:
       Db
       Lib
-      Test
   other-modules:
       Paths_testdb
   hs-source-dirs:
@@ -38,6 +37,7 @@ library
   build-depends:
       base >=4.7 && <5
     , bytestring
+    , envy
     , postgresql-simple
     , safe-exceptions
   default-language: Haskell2010
