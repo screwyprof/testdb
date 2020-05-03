@@ -12,11 +12,9 @@ module Db
 
 import Control.Exception.Safe
 import Data.ByteString (ByteString)
-import Data.Maybe (fromJust)
 
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.Errors
-import Database.PostgreSQL.Simple.ToField
 import Database.PostgreSQL.Simple.FromRow
 import Database.PostgreSQL.Simple.ToRow
 
@@ -44,8 +42,8 @@ addUser conn u = do
 
 fetchUser :: Connection -> Int -> IO (Maybe User)
 fetchUser conn userID = do
-    u <- query conn "SELECT user_id, name, email, password FROM users WHERE user_id = ?" (Only userID)
-    pure $ case u of
+    user <- query conn "SELECT user_id, name, email, password FROM users WHERE user_id = ?" (Only userID)
+    pure $ case user of
         [u] -> Just u
         _ -> Nothing
 

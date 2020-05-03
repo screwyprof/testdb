@@ -24,6 +24,15 @@ dependencies:
 
 library:
   source-dirs: src
+  ghc-options:
+    - -O2
+    - -Wall 
+    - -Werror
+    - -Wcompat
+    - -Wincomplete-uni-patterns
+    - -Wredundant-constraints
+    - -fwarn-tabs
+    - -fwarn-unused-imports
   dependencies:
     - postgresql-simple
     - bytestring
@@ -37,6 +46,14 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -O2
+    - -Wall 
+    - -Werror
+    - -Wcompat
+    - -Wincomplete-uni-patterns
+    - -Wredundant-constraints
+    - -fwarn-tabs
+    - -fwarn-unused-imports
     dependencies:
     - testdb
 

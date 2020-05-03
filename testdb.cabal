@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ced4e73dfca1553d6bd85b4a586a44c268f0b41c9501be62cd78dfdc3b085cc9
+-- hash: 65cc6db242da606dfb716d6be2d47fd145bda2a414d21c41ea6e45f42a063fd0
 
 name:           testdb
 version:        0.1.0.0
@@ -29,10 +29,12 @@ library
   exposed-modules:
       Db
       Lib
+      Test
   other-modules:
       Paths_testdb
   hs-source-dirs:
       src
+  ghc-options: -O2 -Wall -Werror -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -fwarn-tabs -fwarn-unused-imports
   build-depends:
       base >=4.7 && <5
     , bytestring
@@ -46,7 +48,7 @@ executable testdb-exe
       Paths_testdb
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2 -Wall -Werror -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -fwarn-tabs -fwarn-unused-imports
   build-depends:
       base >=4.7 && <5
     , testdb
