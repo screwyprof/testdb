@@ -1,7 +1,8 @@
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE ViewPatterns #-}
 
 module Db
     ( User(..)
@@ -9,16 +10,34 @@ module Db
     , fetchUser
     , fetchUsers
     , withDbConn
+    , mkDBCfg
+    , databaseUrl
+    , PGConfig
     ) where
 
 import Control.Exception.Safe
 import Data.ByteString (ByteString)
+import GHC.Generics
+
+import System.Envy
 
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.Errors
 import Database.PostgreSQL.Simple.FromRow
 import Database.PostgreSQL.Simple.SqlQQ
 import Database.PostgreSQL.Simple.ToRow
+
+newtype PGConfig = PGConfig {
+    databaseUrl :: ByteString -- "DATABASE_URL"
+  } deriving (Generic, Show)
+
+instance FromEnv PGConfig
+
+mkDBCfg :: IO PGConfig
+mkDBCfg = decodeWithDefaults defaultPGConfig
+
+defaultPGConfig :: PGConfig
+defaultPGConfig = PGConfig "postgres://postgres@localhost/test?sslmode=disable"
 
 data User = User { userId :: Int
                  , userName :: String 

@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lib
@@ -9,24 +8,14 @@ module Lib
     , withDbConn
     ) where
 
-import Data.ByteString (ByteString)
-import GHC.Generics
-
 import Control.Exception
-import System.Envy
 import Database.PostgreSQL.Simple
 
 import Db
 
-newtype PGConfig = PGConfig {
-    databaseUrl :: ByteString -- "DATABASE_URL"
-  } deriving (Generic, Show)
-
-instance FromEnv PGConfig
-
 someFunc :: IO ()
 someFunc = do
-    pgCfg <- decodeWithDefaults defaultPGConfig
+    pgCfg <- mkDBCfg
     manageUsers pgCfg
 
 manageUsers :: PGConfig -> IO ()
@@ -63,6 +52,3 @@ showUsers :: Connection -> IO ()
 showUsers conn = do 
     putStrLn "Users:"
     mapM_ print =<< fetchUsers conn
-
-defaultPGConfig :: PGConfig
-defaultPGConfig = PGConfig "postgres://postgres@localhost/test?sslmode=disable"
