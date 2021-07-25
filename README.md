@@ -1,4 +1,3 @@
 # testdb
-# testdb
 
-Haskell postgres-simple demo
+Haskell `postgres-simple` demo
